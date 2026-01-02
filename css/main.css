@@ -1,0 +1,567 @@
+/*
+  Adam Chorfi — Cybersecurity Portfolio
+  Stack: HTML, CSS, JS, GSAP ScrollTrigger
+  Theme: Dark near-black, red accent (#e10600), minimal, premium, cyber
+*/
+:root{
+  /* Base */
+  --bg:#0a0a0a;
+  --bg2:#0d0d0d;
+  --text:#ffffff;
+  --muted:#b5b5b5;
+
+  /* Accents (coordinated) */
+  --accent:#ff3b2f;          /* softened red for more consistent contrast */
+  --accent-2:#25c2ff;        /* secondary cyan used subtly (hero/about only) */
+
+  /* Surfaces & borders */
+  --card:#111111;
+  --border:rgba(255,255,255,.08);
+  --border-strong:rgba(255,59,47,.32);
+
+  --radius:14px;
+  --shadow:0 20px 50px rgba(0,0,0,.65);
+  --glass: rgba(255,255,255,.04);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6; 
+  /* Global background stays subtle; accents are applied per-section */
+  background-image:
+    radial-gradient(1200px 600px at 80% -10%, rgba(255,59,47,.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(255,255,255,.04), transparent 55%);
+  background-attachment: fixed;
+}
+img{max-width:100%;display:block}
+.container{width:min(1400px,90%);margin:0 auto}
+.skip{position:absolute;left:-9999px}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.7);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:.9rem 0}
+.logo{color:#fff;text-decoration:none;font-weight:900;letter-spacing:.2px}
+.logo span{color:var(--accent)}
+.nav-toggle{display:none;background:none;border:0;color:#fff;cursor:pointer}
+.nav-toggle span{display:block;width:22px;height:2px;background:#fff;margin:5px 0}
+.nav-menu{display:flex;gap:.6rem;list-style:none;margin:0;padding:0}
+.nav-menu a{color:#c9ccd1;text-decoration:none;padding:.7rem .9rem;border-radius:8px; position:relative; overflow:hidden}
+.nav-menu a:hover{color:#fff;background:#151515}
+.nav-menu a::after{content:""; position:absolute; inset:auto 8px 6px 8px; height:1px; background:linear-gradient(90deg, transparent, rgba(255,59,47,.6), transparent); opacity:0; transform:translateY(3px); transition:.25s ease}
+.nav-menu a:hover::after{opacity:1; transform:none}
+.nav-menu a.active{color:var(--accent)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-weight:700;text-decoration:none;border:1px solid var(--border);border-radius:12px;padding:.85rem 1.1rem;color:#fff;transition:.25s ease; will-change:transform, box-shadow}
+.btn:hover{transform:translateY(-2px);opacity:.98; box-shadow:0 10px 30px rgba(225,6,0,.12)}
+.btn-primary{background:var(--accent);border-color:transparent}
+.btn-outline{background:transparent;border-color:var(--border-strong);color:#fff}
+.btn-outline:hover{border-color:var(--accent)}
+.btn.full{width:100%}
+
+/* Hero / Sections */
+.section{padding:clamp(3rem,6vw,6rem) 0; position:relative}
+
+/* Increase spacing below section titles across the site */
+/*
+  NOTE: Most section titles in this site are implemented as a "kicker" line using
+  <div class="p-text"> (e.g. "01  ABOUT ME", "02  SKILLS", etc.), not as <h2>.
+  So we add spacing for both patterns.
+*/
+
+/* Section titles — hard reset */
+/*
+  Your section titles are implemented in multiple ways:
+  - Kicker lines: <div class="p-text">01  ABOUT ME</div>
+  - Headings: h2 / h3 in some places
+  - Experience component: .xp__label
+
+  This block forces a consistent bold + red style across ALL of them.
+*/
+.section > .container > .p-text,
+.about-text > .p-text,
+.section h2,
+.section h3,
+.xp__label{
+  color: rgba(255,255,255,.72) !important; /* muted gray */
+  font-weight: 900 !important;
+}
+
+/* Experience title (04 EXPERIENCE) alignment fix */
+.xp__kicker{
+  display:flex;
+  align-items:baseline;
+  gap:.85rem;
+}
+.xp__num{
+  color: inherit;
+  font-weight: 900;
+  letter-spacing: .12em;
+  opacity: .9;
+}
+.xp__label{
+  letter-spacing: .22em;
+}
+
+/* Fallback: titles implemented as headings */
+.section h2,
+.about-text h2,
+.projects .center h2,
+.timeline .center h2,
+.credentials .center h2,
+.arsenal .center h2{ margin-bottom: 1.4rem; }
+
+/* Reusable pill label styling for hero + section kickers */
+.section .label{
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.label{
+  display:inline-flex;
+  align-items:center;
+  gap:.55rem;
+  padding:.4rem .7rem;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+.section:before{content:""; position:absolute; inset:0; pointer-events:none; background:
+  radial-gradient(ellipse at top right, rgba(255,255,255,.03), transparent 40%),
+  radial-gradient(ellipse at bottom left, rgba(255,59,47,.045), transparent 45%);
+  mask:linear-gradient(#000,transparent);
+}
+.hero{position:relative}
+
+/* Home: slightly richer coordinated accent wash (red + cyan) */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:-1px 0 0 0;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 520px at 12% 18%, rgba(37,194,255,.10), transparent 60%),
+    radial-gradient(900px 520px at 78% 10%, rgba(255,59,47,.12), transparent 62%);
+  opacity:.9;
+}
+
+.hero-inner{position:relative}
+/* Hero SVG art */
+.hero-art{display:grid;place-items:center}
+.hero-svg{max-width:360px;width:100%;height:auto;opacity:0;animation:heroFade .8s ease .2s forwards}
+.devsec-hero{filter:drop-shadow(0 12px 50px rgba(0,0,0,.5))}
+.net-hero{filter:drop-shadow(0 12px 50px rgba(0,0,0,.5))}
+/* Cloud topology animations */
+.cloud-topo .cloud-dot{transform-origin:center; animation:cloudPulse 6.2s ease-in-out infinite}
+@keyframes cloudPulse{0%,100%{transform:scale(1); opacity:.85} 50%{transform:scale(1.35); opacity:1}}
+.cloud-topo .hub-dot{animation:hubBlink 4.2s ease-in-out infinite}
+@keyframes hubBlink{0%,70%{opacity:.9} 80%{opacity:.5} 100%{opacity:.9}}
+.cloud-topo .pkt{opacity:.6; animation:cloudPacketAnim 7s linear infinite}
+@keyframes cloudPacketAnim{0%{opacity:.2} 10%{opacity:.7} 50%{opacity:1} 90%{opacity:.7} 100%{opacity:.2}}
+/* Cursor blink */
+@keyframes blink{0%,45%{opacity:1} 55%,100%{opacity:0}}
+.cursor{animation:blink 1.4s steps(1,end) infinite}
+/* Node pulse */
+@keyframes pulse{0%,100%{transform:scale(1); opacity:.9} 50%{transform:scale(1.25); opacity:1}}
+.node-a{animation:pulse 5s ease-in-out infinite}
+.node-b{animation:pulse 6.5s ease-in-out .5s infinite}
+.node-c{animation:pulse 7.5s ease-in-out 1s infinite}
+/* Flow line gentle shimmer using stroke-dashoffset change via filter; fallback opacity wave */
+.flow-line{filter:drop-shadow(0 0 2px rgba(255,255,255,.05)); opacity:.7; animation:flow 6s linear infinite}
+@keyframes flow{0%{opacity:.5} 50%{opacity:.9} 100%{opacity:.5}}
+
+/* SOC visualization animations */
+.soc-svg .n{transform-origin:center; animation:nodePulse 7s ease-in-out infinite}
+.soc-svg .n-b{animation-duration:6s}
+.soc-svg .n-c{animation-duration:6.8s}
+.soc-svg .n-d{animation-duration:7.5s}
+.soc-svg .n-e{animation-duration:8s}
+.soc-svg .n-f{animation-duration:7.2s}
+@keyframes nodePulse{0%,100%{transform:scale(1); opacity:.85} 50%{transform:scale(1.25); opacity:1}}
+
+.soc-svg .packet-path{stroke-width:1.6; opacity:.65; animation:packet 5.8s linear infinite}
+.soc-svg .packet-path.p2{animation-duration:6.6s; animation-delay:.8s}
+.soc-svg .packet-path.p3{animation-duration:7.2s; animation-delay:1.4s}
+@keyframes packet{0%{opacity:.2} 10%{opacity:.7} 50%{opacity:1} 90%{opacity:.7} 100%{opacity:.2}}
+
+.soc-svg .shield{animation:shieldBlink 4.5s ease-in-out infinite}
+@keyframes shieldBlink{0%,70%{opacity:.7} 75%{opacity:.4} 80%{opacity:.7} 100%{opacity:.7}}
+
+/* Fade-in */
+@keyframes heroFade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+/* Responsive: scale down or hide on narrow screens */
+@media (max-width: 900px){
+  .hero-art{margin-top:1rem}
+}
+@media (max-width: 640px){
+  .hero-art{display:none}
+}
+.hero-inner{display:grid;grid-template-columns:1.2fr .8fr;gap:2rem;align-items:center}
+.headline{margin:0 0 1rem; line-height:.88; position:relative; letter-spacing:-.02em}
+/* small red underline accent */
+.headline::after{content:""; position:absolute; left:0; bottom:-10px; width:72px; height:3px; background:linear-gradient(90deg, var(--accent), transparent); border-radius:2px; opacity:.95}
+/* refined word-specific tweaks for nicer optical rhythm */
+.headline-first{font-weight:900; letter-spacing:-.022em}
+.headline-last{font-weight:900; letter-spacing:-.028em}
+.subtitle{color:var(--muted);max-width:64ch}
+.hero-art{display:grid;place-items:center}
+.cyber-orb{position:relative;width:min(360px,90%);aspect-ratio:1/1;border-radius:50%;background:radial-gradient(closest-side, rgba(255,255,255,.04), rgba(0,0,0,0));display:grid;place-items:center;border:1px solid var(--border-strong);box-shadow:var(--shadow)}
+.cyber-orb .ring{position:absolute;inset:8%;border:1px dashed rgba(255,255,255,.2);border-radius:50%;animation:spin 18s linear infinite}
+.cyber-orb .ring.r2{inset:20%;animation-duration:26s;opacity:.6}
+.cyber-orb .icon{font-size:2rem;color:#fff;filter:drop-shadow(0 0 10px rgba(225,6,0,.5))}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* About */
+.about{position:relative}
+
+/* About: subtle coordinated wash + cleaner separation */
+.about::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 520px at 18% 15%, rgba(255,59,47,.09), transparent 60%),
+    radial-gradient(900px 520px at 85% 85%, rgba(37,194,255,.07), transparent 62%);
+  opacity:.85;
+}
+
+.about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:2rem;align-items:center; position:relative}
+.frame{border:1px solid rgba(255,255,255,.10);border-radius:var(--radius);overflow:hidden;background:#0d0d0d; position:relative}
+/* Fix faint bottom seam on framed images */
+.frame::before{content:""; position:absolute; inset:0; background:#0d0d0d; z-index:0}
+.frame > *{position:relative; z-index:1}
+.frame::after{content:""; position:absolute; inset:0; pointer-events:none; background:
+  radial-gradient(120px 80px at 20% 10%, rgba(255,255,255,.06), transparent),
+  radial-gradient(220px 140px at 90% 90%, rgba(255,59,47,.09), transparent),
+  radial-gradient(220px 140px at 80% 20%, rgba(37,194,255,.06), transparent)
+}
+.frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05); transform:translateY(0.1px) scale(1.01); transform-origin:center top}
+.about-text h2{margin:.2rem 0 1rem;font-size:2.2rem}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1rem}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem}
+.stat .num{font-size:1.6rem;font-weight:800}
+.stat .label{color:var(--muted)}
+
+/* Arsenal */
+.arsenal .center{text-align:center;margin:0 0 1.2rem; font-weight:900; letter-spacing:-.02em}
+.arsenal .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem; align-items:stretch}
+
+/* Ensure items are aligned to the same top edge (avoid baseline alignment quirks) */
+#arsenal .grid{align-items:stretch}
+#arsenal .grid > .card{align-self:stretch}
+
+/* Skills-only styling (scoped to #arsenal)
+   Goal: keep all cards proportional (same visual height) and tags aligned. */
+#arsenal .card{
+  padding:2rem;
+  border-color:rgba(255,255,255,.14);
+  background:rgba(0,0,0,.22);
+  height:100%;
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+
+/* If the first card still renders slightly offset, force it to match the row start */
+#arsenal .grid > .card:first-child{align-self:stretch; margin-top:0}
+#arsenal .card:hover{transform:translateY(-6px); border-color:rgba(255,59,47,.32); box-shadow:0 28px 70px rgba(0,0,0,.65), 0 12px 34px rgba(255,59,47,.10)}
+#arsenal .card-head{
+  gap:1rem;
+  font-size:1.1rem;
+  font-weight:800;
+  align-items:center;
+}
+
+/* Normalize heading vertical metrics so the first card doesn't sit higher */
+#arsenal .skill-title{
+  line-height:1.15;
+  margin:0;
+}
+#arsenal .skill-ico{width:44px; height:44px; border-radius:10px; display:grid; place-items:center; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.10)}
+#arsenal .skill-ico i{color:var(--accent); font-size:1.15rem}
+#arsenal .card-head .dot{display:none}
+
+#arsenal .tags{
+  gap:.6rem;
+  margin-top:1rem;
+  align-content:flex-start;
+}
+
+/* Push tags block to the bottom so all cards align consistently */
+#arsenal .card .tags{margin-top:auto; padding-top:1rem}
+
+#arsenal .tags span{border-radius:8px; padding:.32rem .65rem; background:rgba(0,0,0,.18); border-color:rgba(255,255,255,.16); color:#cfd3da; font-size:.9rem}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;transition:border-color .2s, box-shadow .2s, transform .2s}
+.card:hover{border-color:var(--border-strong);box-shadow:0 8px 30px rgba(225,6,0,.12); transform:translateY(-3px)}
+.card-head{display:flex;align-items:center;gap:.6rem;font-weight:700}
+.card-head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(225,6,0,.15)}
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.7rem}
+.tags span{background:#0d0d0d;border:1px solid var(--border);border-radius:999px;padding:.35rem .6rem;color:#ddd;font-size:.95rem}
+
+/* Projects */
+.projects .center{text-align:center;margin:0 0 1.4rem}
+.project{display:grid;grid-template-columns:1.05fr .95fr;gap:1.4rem;align-items:center;margin:1.4rem 0}
+.project.alt-1{grid-template-columns:.95fr 1.05fr}
+.p-media img{width:100%;border-radius:14px;border:1px solid var(--border);filter:grayscale(1) contrast(1.05);box-shadow:var(--shadow); transition:transform .3s ease}
+.project:hover .p-media img{transform:scale(1.02)}
+.p-text .label{display:inline-block;color:#fff;background:rgba(255,59,47,.14);border:1px solid var(--border-strong);border-radius:999px;font-size:.85rem;padding:.25rem .6rem;margin-bottom:.4rem}
+.p-text h3{margin:.2rem 0 .5rem}
+.p-text p{color:var(--muted)}
+
+/* Timeline */
+.timeline .center{text-align:center;margin:0 0 1.4rem}
+.timeline .line{position:relative;width:2px;background:rgba(255,255,255,.08);margin:0 auto;border-radius:1px;height:0;overflow:hidden; box-shadow:0 0 0 1px rgba(255,255,255,.03)}
+.t-items{position:relative}
+.t-item{position:relative;display:grid;grid-template-columns:1fr;gap:.6rem;margin:1.2rem 0}
+.t-item .dot{position:absolute;left:calc(50% - 6px);top:.2rem;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px rgba(225,6,0,.15)}
+.t-item .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;max-width:560px}
+.t-item.left .card{margin-right:auto}
+.t-item.right .card{margin-left:auto}
+.company{color:var(--muted);margin:.1rem 0 .5rem}
+
+/* Certifications (enterprise / recruiter-friendly) */
+#certs{
+  --cert-border: rgba(255,255,255,.10);
+  --cert-border-hover: rgba(255,59,47,.35);
+}
+
+.certs-layout{
+  margin-top:1.9rem;
+  display:grid;
+  grid-template-columns: 1fr .42fr;
+  gap:2.25rem;
+  align-items:start;
+}
+
+.certs-heading{
+  margin:0 0 1.1rem;
+  font-size:.98rem;
+  font-weight:900;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.78);
+}
+
+/* Technical grid */
+.certs-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:1.1rem;
+}
+
+.cert-tile{
+  display:grid;
+  grid-template-columns:56px 1fr;
+  gap:1rem;
+  padding:1.1rem 1.15rem;
+  border-radius:16px;
+  background:rgba(255,255,255,.018);
+  border:1px solid var(--cert-border);
+  transition:
+    border-color .18s ease,
+    transform .18s ease,
+    background .18s ease;
+}
+
+/* micro-interaction: subtle lift + crisp hover border; no glow */
+.cert-tile:hover{
+  border-color: var(--cert-border-hover);
+  transform: translateY(-2px);
+  background:rgba(255,255,255,.028);
+}
+
+/* keyboard focus: visible but minimal */
+.cert-tile:focus-within{
+  border-color: rgba(255,59,47,.28);
+}
+
+.cert-tile__badge{
+  width:56px;
+  height:56px;
+  border-radius:14px;
+  overflow:hidden;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.07);
+}
+
+.cert-tile__badge img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.cert-tile__title{
+  margin:0 0 .25rem;
+  font-size:1.06rem;
+  font-weight:900;
+  letter-spacing:-.012em;
+  line-height:1.2;
+}
+
+.cert-tile__meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:.45rem;
+  margin:0 0 .6rem;
+  color:rgba(255,255,255,.60);
+  font-size:.9rem;
+}
+
+.cert-tile__dot{opacity:.6}
+
+.cert-tile__desc{
+  margin:0;
+  color:rgba(255,255,255,.62);
+  font-size:.93rem;
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* CTA: low priority; becomes clearer on hover/focus */
+.cert-tile__cta{
+  display:inline-flex;
+  margin-top:.7rem;
+  font-size:.84rem;
+  text-decoration:none;
+  color:rgba(255,255,255,.50);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  padding:.36rem .62rem;
+  width:max-content;
+  transition:color .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.cert-tile:hover .cert-tile__cta,
+.cert-tile__cta:focus-visible{
+  color:rgba(255,255,255,.86);
+  border-color: rgba(255,59,47,.26);
+  background:rgba(255,59,47,.06);
+}
+
+/* Academic list (secondary, no cards) */
+.certs-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:grid;
+  gap:.65rem;
+}
+
+.certs-row{
+  font-size:.93rem;
+  color:rgba(255,255,255,.68);
+  letter-spacing:.01em;
+}
+
+.certs-row__meta{
+  color:rgba(255,255,255,.48);
+}
+
+/* Responsive */
+@media (max-width: 1050px){
+  .certs-layout{grid-template-columns:1fr; gap:1.75rem}
+  .certs-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+}
+@media (max-width: 640px){
+  .certs-grid{grid-template-columns:1fr}
+  .cert-tile{grid-template-columns:52px 1fr; padding:1.05rem}
+  .cert-tile__badge{width:52px; height:52px}
+so i do}
+
+/* Credentials (Contact form card) */
+.credentials .cred-box{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.0));
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:1.35rem;
+  box-shadow:var(--shadow);
+  max-width:560px;
+  margin:0 auto;
+  text-align:left;
+}
+
+.credentials .muted{color:var(--muted);margin:-.2rem 0 1rem}
+
+.cred-form{
+  display:grid;
+  gap:1rem;
+  margin-top:.35rem;
+}
+
+.field{
+  display:grid;
+  gap:.45rem;
+  text-align:left;
+}
+
+.field label{
+  font-weight:800;
+  font-size:.95rem;
+  letter-spacing:-.01em;
+  color:rgba(255,255,255,.92);
+}
+
+.field input,
+.field textarea{
+  width:100%;
+  background:rgba(255,255,255,.02);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:12px;
+  padding:.85rem .95rem;
+  outline:none;
+  font-size:.98rem;
+  line-height:1.3;
+  transition:border-color .18s ease, background .18s ease;
+}
+
+.field textarea{resize:vertical; min-height:140px}
+
+.field input::placeholder,
+.field textarea::placeholder{
+  color:rgba(255,255,255,.40);
+}
+
+.field input:focus,
+.field textarea:focus{
+  border-color:rgba(255,59,47,.30);
+  background:rgba(255,255,255,.03);
+}
+
+/* Keep CTA readable and slightly more premium */
+#contact .btn{
+  letter-spacing:-.01em;
+  font-weight:700;
+}
+
+.status{color:#c9ccd1;min-height:1.2em;margin-top:.5rem}
+
+/* Footer */
+.site-footer{border-top:1px solid var(--border);padding:1.5rem 0;color:#9aa0a6; position:relative}
+.site-footer::before{content:""; position:absolute; inset:auto 0 0 0; height:1px; background:linear-gradient(90deg, transparent, rgba(225,6,0,.5), transparent)}
+.site-footer .container{display:flex;justify-content:space-between;align-items:center}
+.to-top{color:#9aa0a6;text-decoration:none}
+.to-top:hover{color:#fff}
+
+/* Responsive */
+@media (max-width: 900px){
+  .hero-inner,.about-grid{grid-template-columns:1fr}
+  .project,.project.alt-1{grid-template-columns:1fr}
+  .arsenal .grid{grid-template-columns:1fr 1fr}
+  .headline{font-size:clamp(2.4rem,9vw,4.2rem)}
+}
+@media (max-width: 600px){
+  .arsenal .grid{grid-template-columns:1fr}
+  .nav-toggle{display:inline-block}
+  .nav-menu{position:fixed;right:1rem;top:60px;background:#0c0c0c;border:1px solid var(--border);border-radius:10px;padding:.5rem;display:none;flex-direction:column}
+  .nav-menu.open{display:flex}
+}
